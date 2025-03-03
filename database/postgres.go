@@ -22,14 +22,13 @@ func NewConnectionToPostgressDatabase(conf *config.Config) *PostgresDatabase {
 	once.Do(
 		func() {
 			dsn := fmt.Sprintf(
-				"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=%s",
+				"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
 				conf.Db.Host,
 				conf.Db.User,
 				conf.Db.Password,
-				conf.Db.DBName,
+				conf.Db.Name,
 				conf.Db.Port,
 				conf.Db.SSLMode,
-				conf.Db.TimeZone,
 			)
 
 			db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

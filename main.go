@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"todo-app-api/config"
+	"todo-app-api/database"
+	"todo-app-api/server"
+)
 
 func main() {
-	fmt.Println("Im gonna start this project")
+	config := config.GetConfig()
+	db := database.NewConnectionToPostgressDatabase(config)
+	server.MakeNewEchoServer(config, db).Start()
 }

@@ -8,21 +8,20 @@ import (
 
 type Config struct {
 	Server *Server
-	Db     *Db
+	Db     *Database `mapstructure:"database"`
 }
 
 type Server struct {
 	Port int
 }
 
-type Db struct {
+type Database struct {
 	Host     string
 	Port     int
 	User     string
 	Password string
-	DBName   string
+	Name     string
 	SSLMode  string
-	TimeZone string
 }
 
 var (
@@ -34,8 +33,8 @@ func GetConfig() *Config {
 	once.Do(
 		func() {
 			viper.SetConfigName("config")
-			viper.SetConfigFile("yaml")
-			viper.AddConfigPath("./")
+			viper.SetConfigType("yaml")
+			viper.AddConfigPath(".")
 
 			if err := viper.ReadInConfig(); err != nil {
 				panic(err)
