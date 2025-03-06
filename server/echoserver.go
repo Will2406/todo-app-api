@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"todo-app-api/config"
 	"todo-app-api/database"
+	"todo-app-api/task/router"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -31,6 +32,8 @@ func (server *EchoServer) Start() {
 func MakeNewEchoServer(config *config.Config, database *database.PostgresDatabase) Server {
 	newEchoApp := echo.New()
 	newEchoApp.Logger.SetLevel(log.DEBUG)
+
+	router.MakeTaskRouter(database.Db, newEchoApp)
 
 	return &EchoServer{
 		database: database,
