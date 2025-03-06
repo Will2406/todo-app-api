@@ -30,3 +30,11 @@ func (t *Task) MapToBase() TaskBase {
 		UpdatedAt: t.UpdatedAt,
 	}
 }
+
+func (t *TaskBase) MapToModel() *Task {
+	return &Task{
+		ID:        t.ID,
+		Name:      t.Name,
+		UpdatedAt: t.UpdatedAt,
+	}
+}

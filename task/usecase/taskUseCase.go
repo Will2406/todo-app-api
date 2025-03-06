@@ -8,7 +8,7 @@ import (
 
 type (
 	TaskUseCase interface {
-		Create() error
+		Create(ctx context.Context, task entities.TaskBase) error
 		GetAllTasks(ctx context.Context) ([]entities.TaskBase, error)
 	}
 
@@ -21,7 +21,10 @@ func MakeTaskUseCase(rp repository.TaskRepository) TaskUseCase {
 	return &TaskUseCaseImpl{repository: rp}
 }
 
-func (usecase TaskUseCaseImpl) Create() error {
+func (usecase TaskUseCaseImpl) Create(ctx context.Context, task entities.TaskBase) error {
+	if err := usecase.repository.Create(ctx, task.MapToModel()); err != nil {
+		return err
+	}
 	return nil
 }
 

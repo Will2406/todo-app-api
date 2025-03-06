@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"time"
 	"todo-app-api/core"
 	"todo-app-api/task/entities"
 	"todo-app-api/task/usecase"
@@ -12,6 +13,7 @@ import (
 type (
 	TaskController interface {
 		GetAllTasks(ctx echo.Context) error
+		Create(ctx echo.Context) error
 	}
 
 	TaskControllerImpl struct {
@@ -21,6 +23,25 @@ type (
 
 func MakeTaskController(usecase usecase.TaskUseCase) TaskController {
 	return &TaskControllerImpl{usecase: usecase}
+}
+
+func (controller TaskControllerImpl) Create(ctx echo.Context) error {
+	task := entities.TaskBase{
+		UpdatedAt: time.Now(),
+	}
+
+	if err := ctx.Bind(&task); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := controller.usecase.Create(ctx.Request().Context(), task); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return ctx.JSON(http.StatusCreated, core.BaseResponse{
+		Message: "Success",
+		Status:  "Success",
+	})
+
 }
 
 func (controller TaskControllerImpl) GetAllTasks(ctx echo.Context) error {

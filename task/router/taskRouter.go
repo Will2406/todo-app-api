@@ -15,4 +15,5 @@ func MakeTaskRouter(database *gorm.DB, server *echo.Echo) {
 	controller := controller.MakeTaskController(usecase)
 
 	server.GET("/tasks", controller.GetAllTasks)
+	server.POST("/task", controller.Create)
 }
