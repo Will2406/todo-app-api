@@ -16,4 +16,6 @@ func MakeTaskRouter(database *gorm.DB, server *echo.Echo) {
 
 	server.GET("/tasks", controller.GetAllTasks)
 	server.POST("/task", controller.Create)
+	server.PUT("/task/:id", controller.Update)
+	server.DELETE("/task/:id", controller.Delete)
 }

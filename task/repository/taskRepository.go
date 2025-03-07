@@ -11,6 +11,8 @@ type (
 	TaskRepository interface {
 		Create(ctx context.Context, task *entities.Task) error
 		GetAllTasks(ctx context.Context, tasks *[]entities.Task) error
+		Update(ctx context.Context, task *entities.Task) error
+		Delete(ctx context.Context, id uint) error
 	}
 
 	TaskRepositoryImpl struct {
@@ -34,4 +36,12 @@ func (repository TaskRepositoryImpl) GetAllTasks(ctx context.Context, tasks *[]e
 		return err
 	}
 	return nil
+}
+
+func (r *TaskRepositoryImpl) Update(ctx context.Context, task *entities.Task) error {
+	return r.db.WithContext(ctx).Save(task).Error
+}
+
+func (r *TaskRepositoryImpl) Delete(ctx context.Context, id uint) error {
+	return r.db.WithContext(ctx).Delete(&entities.Task{}, id).Error
 }

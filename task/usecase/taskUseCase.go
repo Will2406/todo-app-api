@@ -10,6 +10,8 @@ type (
 	TaskUseCase interface {
 		Create(ctx context.Context, task entities.TaskBase) error
 		GetAllTasks(ctx context.Context) ([]entities.TaskBase, error)
+		Update(ctx context.Context, task entities.TaskBase) error
+		Delete(ctx context.Context, id uint) error
 	}
 
 	TaskUseCaseImpl struct {
@@ -22,10 +24,7 @@ func MakeTaskUseCase(rp repository.TaskRepository) TaskUseCase {
 }
 
 func (usecase TaskUseCaseImpl) Create(ctx context.Context, task entities.TaskBase) error {
-	if err := usecase.repository.Create(ctx, task.MapToModel()); err != nil {
-		return err
-	}
-	return nil
+	return usecase.repository.Create(ctx, task.MapToModel())
 }
 
 func (usecase TaskUseCaseImpl) GetAllTasks(ctx context.Context) ([]entities.TaskBase, error) {
@@ -39,4 +38,12 @@ func (usecase TaskUseCaseImpl) GetAllTasks(ctx context.Context) ([]entities.Task
 		taskResp = append(taskResp, task.MapToBase())
 	}
 	return taskResp, nil
+}
+func (usecase *TaskUseCaseImpl) Update(ctx context.Context, task entities.TaskBase) error {
+	taskModel := task.MapToModel()
+	return usecase.repository.Update(ctx, taskModel)
+}
+
+func (usecase *TaskUseCaseImpl) Delete(ctx context.Context, id uint) error {
+	return usecase.repository.Delete(ctx, id)
 }
